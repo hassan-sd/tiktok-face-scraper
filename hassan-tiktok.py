@@ -62,9 +62,12 @@ def extract_faces_from_face_frames(face_frames):
 def save_faces_to_folders(face_images, output_folder):
     for person_id, person_faces in face_images.items():
         person_folder = os.path.join(output_folder, f"person{person_id}")
+        os.makedirs(person_folder, exist_ok=True)
         for idx, face_image in enumerate(person_faces):
-            face_file = os.path.join(person_folder, f"person{person_id}_face{idx}.jpg")
-            cv2.imwrite(face_file, face_image)
+            if not face_image is None:
+                face_file = os.path.join(person_folder, f"person{person_id}_face{idx}.jpg")
+                cv2.imwrite(face_file, face_image)
+
 
 def extract_faces_from_video(video_path, output_folder):
     video_capture = cv2.VideoCapture(video_path)
