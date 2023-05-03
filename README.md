@@ -31,3 +31,11 @@ If you want to extract faces from multiple TikTok videos, follow these steps:
 2.  Run the command `python hassan-tiktok.py -m` to launch the script in multiple video mode.
 3.  When prompted, enter the path to the text file you created in step 1.
 4.  The script will download each video, extract the faces, and save them in separate directories.
+
+
+## Video
+
+
+
+https://user-images.githubusercontent.com/119671806/236033777-a93326aa-8f1c-4844-bd50-d69463f0443b.mp4
+
