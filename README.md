@@ -1,4 +1,6 @@
 
+* Patreon: https://www.patreon.com/sd_hassan
+
 # TikTok Face Extractor
 
 This is a Python script that allows you to extract faces from TikTok videos.
