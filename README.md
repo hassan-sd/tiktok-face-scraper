@@ -20,7 +20,7 @@ This is a Python script that allows you to extract faces from TikTok videos.
 
 1.  Open a terminal or command prompt and navigate to the root directory of the project.
 2.  Run the command `python hassan-tiktok.py` to launch the script.
-3.  Enter the URL of the TikTok video you want to extract faces from.
+3.  Select either a profile or URL download option then enter the URL or the username of the TikTok video/account you want to extract faces from.
 4.  The script will download the video and extract the faces. The extracted faces will be saved in the `faces` directory.
 
 
