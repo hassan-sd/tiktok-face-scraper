@@ -34,7 +34,19 @@ If you want to extract faces from multiple TikTok videos, follow these steps:
 3.  When prompted, enter the path to the text file you created in step 1.
 4.  The script will download each video, extract the faces, and save them in separate directories.
 
+If you get a build error when installing requirements, you may need the Visual Studio Build tools c++ workload
 
+Download build tools: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+Then in the same folder where your EXE is, run this command:
+
+`.\vs_BuildTools.exe --quiet --wait --norestart --nocache --installPath C:\BuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.Windows10SDK.19041`
+
+or
+
+`vs_BuildTools.exe --quiet --wait --norestart --nocache --installPath C:\BuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.Windows10SDK.19041`
+
+Leave it running and you can see in your C:\BuildTools that new folders are being added. When it's finished, restart the PC and your package should install correctly 
 ## Video
 
 
