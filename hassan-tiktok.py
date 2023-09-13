@@ -18,6 +18,9 @@ import face_recognition
 from urllib.parse import urlsplit
 import shutil
 import numpy as np
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+
 
 def download_tiktok_video(url, output_path):
     options = Options()
@@ -30,18 +33,19 @@ def download_tiktok_video(url, output_path):
     options.add_experimental_option('excludeSwitches', ['enable-logging'])  # Add this line
 
     # Update the path to your ChromeDriver location
-    driver = webdriver.Chrome(options=options, executable_path="chromedriver.exe")
+    service = Service(executable_path='./chromedriver.exe')
+    driver = webdriver.Chrome(service=service, options=options)
     driver.get("https://snaptik.app/")
     driver.find_element(By.ID, "url").send_keys(url)
     driver.find_element(By.CSS_SELECTOR, "#hero > div > form > button").click()
 
     # Wait for the download link to appear
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "#download > div > div.video-links > a:nth-child(1)"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#download > div > div.video-links > a:nth-child(2)"))
     )
 
     # Download the video at the selector: #download > div > div.video-links > a:nth-child(1)
-    download_button = driver.find_elements(By.CSS_SELECTOR, "#download > div > div.video-links > a:nth-child(1)")
+    download_button = driver.find_elements(By.CSS_SELECTOR, "#download > div > div.video-links > a:nth-child(2)")
     download_url = download_button[0].get_attribute("href")
 
     response = requests.get(download_url)
