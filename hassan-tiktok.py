@@ -145,7 +145,8 @@ def get_video_links_from_profile(profile_url, num_videos):
     options.add_argument("--disable-dev-shm-usage")
     options.add_experimental_option('excludeSwitches', ['enable-logging'])  # Add this line
 
-    driver = webdriver.Chrome(options=options, executable_path="chromedriver.exe")
+    service = Service(executable_path='./chromedriver.exe')
+    driver = webdriver.Chrome(service=service, options=options)
 
     driver.get(profile_url)
     WebDriverWait(driver, 30).until(
