@@ -149,11 +149,12 @@ def get_video_links_from_profile(profile_url, num_videos):
     driver = webdriver.Chrome(service=service, options=options)
 
     driver.get(profile_url)
+    print(profile_url)
     WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.XPATH, '//div[contains(@id, "main-content-others_homepage")]/div/div/div/div/div/div/div/div/a'))
+        EC.presence_of_element_located((By.XPATH, '//*[@id="main-content-others_homepage"]/div/div[2]/div[2]/div/div/div[2]/a'))
     )
 
-    video_cards = driver.find_elements(By.XPATH, '//div[contains(@id, "main-content-others_homepage")]/div/div/div/div/div/div/div/div/a')
+    video_cards = driver.find_elements(By.XPATH, '//*[@id="main-content-others_homepage"]/div/div[2]/div[2]/div/div/div[2]/a')
 
     video_links = []
 
