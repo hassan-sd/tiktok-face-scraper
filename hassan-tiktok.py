@@ -1,4 +1,5 @@
 import os
+import glob
 import cv2
 import time
 import random
@@ -21,6 +22,25 @@ import numpy as np
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 import time  # import this for sleep function
+
+def process_directory(directory_path):
+    video_files = glob.glob(os.path.join(directory_path, "*.mp4"))
+
+    for video_file in video_files:
+        # Determine output folder based on video file name
+        video_name = os.path.splitext(os.path.basename(video_file))[0]
+        output_folder = os.path.join("output", "directory", video_name)
+
+        # Create the directory if it doesn't exist
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        # Process the video
+        face_frames = extract_faces_from_video(video_file, os.path.join(output_folder), save_all_frames=True)
+        face_images = extract_faces_from_face_frames(face_frames)
+        save_faces_to_folders(face_images, os.path.join(output_folder))
+        print(f"Processed {video_file} and saved the results to {output_folder}")
+
 
 def subscribe_to_profile(profile_url, last_video_url=None):
     # Infinite loop to keep checking for new videos
@@ -254,7 +274,8 @@ def group_similar_faces(face_images, threshold=0.6):
 
 def main():
     # Ask user for TikTok URL or profile
-    tiktok_choice = input("Do you want to process a single TikTok video, a TikTok profile, or subscribe to a profile? (Video/Profile/Subscribe): ").lower()
+    tiktok_choice = input("Do you want to process a single TikTok video, a TikTok profile, subscribe to a profile or load a directory? (Video/Profile/Subscribe/Directory): ").lower()
+
 
     if tiktok_choice in ["profile", "p"]:
 
@@ -338,6 +359,10 @@ def main():
             print("Checking for updates on profile:", tiktok_username)
             subscribe_to_profile(profile_url)
             time.sleep(600)  # Check every 10 minutes. Adjust this as necessary.
+    elif tiktok_choice in ["directory", "d"]:
+        # Ask user for directory path
+        directory_path = input("Enter the directory path containing the videos: ")
+        process_directory(directory_path)
 
     else:
         print("Invalid choice.")
