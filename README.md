@@ -8,6 +8,7 @@ This is a Python script that allows you to extract faces from TikTok videos.
 ## Features
 
 -   Downloads a TikTok video from a given URL or downloads a profile upp to 28 videos
+-   Allows the ability to "subscribe" to a tiktok profile, it will download the latest video then will perform auto checks every 10 mins for new videos and download any new videos that are posted until the bot is stopped
 -   Extracts faces from the downloaded video
 -   Saves the extracted faces to disk
 
