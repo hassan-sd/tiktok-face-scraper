@@ -20,6 +20,51 @@ import shutil
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+import time  # import this for sleep function
+
+def subscribe_to_profile(profile_url, last_video_url=None):
+    # Infinite loop to keep checking for new videos
+    while True:
+        video_links = get_video_links_from_profile(profile_url, 1)
+        
+        if not video_links:
+            print("Error: Couldn't fetch video links.")
+            time.sleep(5*60) # Sleep for 5 minutes before retrying
+            continue
+
+        current_video_url = video_links[0]
+
+        # If the latest video is different from the one we last processed
+        if current_video_url != last_video_url:
+            print(f"New video found: {current_video_url}")
+            process_video(current_video_url)
+            last_video_url = current_video_url
+        else:
+            print("No new videos yet.")
+
+        time.sleep(5*60)  # Check every 5 minutes
+def process_video(video_url):
+    # Extract the username from the video URL
+    url_parts = urlsplit(video_url)
+    username = url_parts.path.split('/')[1]
+
+    # Update the output directory to include the username
+    output_folder = os.path.join("output", username, os.path.splitext(os.path.basename(video_url))[0])
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Process single video
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_video_file = os.path.join(tmpdir, f"{random.randint(1000, 9999)}_temp_video.mp4")
+        download_tiktok_video(video_url, temp_video_file)
+        face_frames = extract_faces_from_video(temp_video_file, os.path.join(output_folder), save_all_frames=True)
+        face_images = extract_faces_from_face_frames(face_frames)
+        save_faces_to_folders(face_images, os.path.join(output_folder))
+        print("Face images saved to:", os.path.abspath(os.path.join(output_folder)))
+
+    print("Video processed.")
 
 
 def download_tiktok_video(url, output_path):
@@ -209,9 +254,10 @@ def group_similar_faces(face_images, threshold=0.6):
 
 def main():
     # Ask user for TikTok URL or profile
-    tiktok_choice = input("Do you want to process a single TikTok video or a TikTok profile? (Video/Profile): ").lower()
+    tiktok_choice = input("Do you want to process a single TikTok video, a TikTok profile, or subscribe to a profile? (Video/Profile/Subscribe): ").lower()
 
     if tiktok_choice in ["profile", "p"]:
+
         # Ask user for TikTok profile username
         tiktok_username = input("Enter TikTok profile username: ")
         profile_url = f"https://www.tiktok.com/@{tiktok_username}"
@@ -260,7 +306,7 @@ def main():
                         dst = os.path.join(merged_person_folder, f"person{person_id}_face{face_idx}.jpg")
                         shutil.copyfile(src, dst)
                         face_idx += 1
-    else:
+    elif tiktok_choice in ["video", "v"]:
         # Ask user for TikTok URL
         tiktok_url = input("Enter TikTok URL: ")
         # Extract the username from the video URL
@@ -284,6 +330,18 @@ def main():
             print("Face images saved to:", os.path.abspath(os.path.join(output_folder)))
 
         print("Video processed.")
+
+    elif tiktok_choice in ["subscribe", "s"]:
+        tiktok_username = input("Enter TikTok profile username to subscribe to: ")
+        profile_url = f"https://www.tiktok.com/@{tiktok_username}"
+        while True:  # Creating an infinite loop to keep checking for updates
+            print("Checking for updates on profile:", tiktok_username)
+            subscribe_to_profile(profile_url)
+            time.sleep(600)  # Check every 10 minutes. Adjust this as necessary.
+
+    else:
+        print("Invalid choice.")
+
 
 
 if __name__ == "__main__":
